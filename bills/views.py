@@ -20,7 +20,11 @@ def debt_list(request):
     bill_statuses = get_bill_statuses(code_list)
     today = datetime.today()
     debts = Debt.objects.filter(status__in=bill_statuses).order_by('bill')
-    total = str(debts.aggregate(Sum('total_owed')).get('total_owed__sum'))
+    total = debts.aggregate(Sum('total_owed')).get('total_owed__sum')
+    if total:
+        total = str(total)
+    else:
+        total = 0
     context = {
         'debts': debts,
         'total': total,
