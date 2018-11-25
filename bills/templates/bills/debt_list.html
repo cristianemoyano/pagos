@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block content %}
+         <h2>{{ today|date:"F"  }}</h2>
+          <h3>Total: $ {{ total }}</h3>
+
+          <div class="table-responsive">
+            <table class="table table-striped table-sm">
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>expiration_date</th>
+                  <th>total_month</th>
+                  <th>total_owed</th>
+                  <th>charge</th>
+                  <th>status</th>
+                  <th>total_installments</th>
+                  <th>detail</th>
+                  <th>pay</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for debt in debts %}
+                <tr>
+                <td>{{ debt.bill.title }}</td>
+                <td>{{ debt.expiration_date }}</td>
+                <td>
+                {{ debt.bill.currency_code }} {{ debt.bill.currency_symbol }} {{ debt.total_month }}
+                </td>
+                <td>
+                {{ debt.bill.currency_code }} {{ debt.bill.currency_symbol }} {{ debt.total_owed }}
+                </td>
+                <td>
+                {{ debt.bill.currency_code }} {{ debt.bill.currency_symbol }} {{ debt.charge }}
+                </td>
+                <td>{{ debt.status.title }}</td>
+                <td>{{ debt.installment_number }} / {{ debt.bill.total_installments }}</td>
+                <td>{{ debt.detail|linebreaksbr }}</td>
+                <td>
+                  <a class="btn btn-primary" href="/pay/{{ debt.id }}">  PAY</a>
+                </td>
+                </tr>
+                {% endfor %}
+
+              </tbody>
+            </table>
+          </div>
+{% endblock %}
