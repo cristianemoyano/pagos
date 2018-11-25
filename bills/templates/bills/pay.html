@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <h2>Pay: {{ id }}</h2>
+
+    <form action="/pay/{{ id }}/" method="post">
+        <div class="form-group">
+            {% csrf_token %}
+            {{ form }}
+        </div>
+        <button type="submit" class="btn btn-primary">Pay</button>
+      </form>
+
+{% endblock %}
