@@ -24,3 +24,6 @@ migrations:
 
 migrate:
 	python manage.py migrate
+
+freeze:
+	pip freeze > requirements.txt
