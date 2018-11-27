@@ -10,29 +10,56 @@ from .forms import (
 from .domains import (
     generate_pending_debts,
     get_bill_statuses,
+    get_bill_status,
     pay_total_debt,
     BILL_STATUSES,
 )
-
+from dateutil.relativedelta import relativedelta
 
 def debt_list(request):
+    
+    today = datetime.today()
+    next_month = today + relativedelta(months=+1)
+
     code_list = [BILL_STATUSES.get('pending'), BILL_STATUSES.get('expired')]
     bill_statuses = get_bill_statuses(code_list)
-    today = datetime.today()
-    debts = Debt.objects.filter(status__in=bill_statuses).order_by('bill')
-    total = debts.aggregate(Sum('total_owed')).get('total_owed__sum')
-    if total:
-        total = str(total)
+    debts_this_month = Debt.objects.filter(
+        status__in=bill_statuses,
+        expiration_date__month=today.month
+    ).order_by('bill')
+    total_this_month = debts_this_month.aggregate(Sum('total_owed')).get('total_owed__sum')
+    
+    debts_next_month = Debt.objects.filter(
+        status__in=bill_statuses,
+        expiration_date__month=today.month+1
+    ).order_by('bill')
+    total_next_month = debts_next_month.aggregate(Sum('total_owed')).get('total_owed__sum')
+    
+    paid_status = get_bill_status(BILL_STATUSES.get('paid'))
+    paids = Debt.objects.filter(status=paid_status).order_by('bill')
+
+    if total_this_month:
+        total_this_month = str(total_this_month)
     else:
-        total = 0
+        total_this_month = 0
+    
+    if total_next_month:
+        total_next_month = str(total_next_month)
+    else:
+        total_next_month = 0
+
     context = {
-        'debts': debts,
-        'total': total,
-        'today': today
+        'debts': debts_this_month,
+        'next_debts': debts_next_month,
+        'total': total_this_month,
+        'next_total': total_next_month,
+        'today': today,
+        'next_month': next_month,
+        'paids': paids,
     }
     return render(
         request,
-        'bills/debt_list.html',
+        'bills/home.html',
         context=context
     )
 
