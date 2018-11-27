@@ -49,7 +49,7 @@ def get_amount_of_debts(bill):
     d1 = bill.start_count
     d2 = timezone.now()
     diff = abs((d2 - d1).days)
-    debts_count = int(diff / bill.frequency) + 1
+    debts_count = round(diff / bill.frequency) + 1
     return debts_count
 
 

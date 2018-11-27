@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+{% block content %}
+         <h2>Pending debts: {{ today|date:"F"  }}</h2>
+          <h3>Total: $ {{ total }}</h3>
+
+          <div class="table-responsive">
+            <table class="table table-striped table-sm">
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>expiration_date</th>
+                  <th>total_month</th>
+                  <th>total_owed</th>
+                  <th>charge</th>
+                  <th>status</th>
+                  <th>total_installments</th>
+                  <th>detail</th>
+                  <th>pay</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for debt in debts %}
+                <tr>
+                <td>{{ debt.bill.title }}</td>
+                <td>{{ debt.expiration_date }}</td>
+                <td>
+                {{ debt.bill.currency_code }} {{ debt.bill.currency_symbol }} {{ debt.total_month }}
+                </td>
+                <td>
+                {{ debt.bill.currency_code }} {{ debt.bill.currency_symbol }} {{ debt.total_owed }}
+                </td>
+                <td>
+                {{ debt.bill.currency_code }} {{ debt.bill.currency_symbol }} {{ debt.charge }}
+                </td>
+                <td>{{ debt.status.title }}</td>
+                <td>{{ debt.installment_number }} / {{ debt.bill.total_installments }}</td>
+                <td>{{ debt.detail|linebreaksbr }}</td>
+                <td>
+                  <a class="btn btn-primary" href="/pay/{{ debt.id }}">  PAY</a>
+                </td>
+                </tr>
+                {% endfor %}
+
+              </tbody>
+            </table>
+          </div>
+          <hr>
+
+          <h2>Next debts: {{ next_month|date:"F"  }}</h2>
+          <h3>Total: $ {{ next_total }}</h3>
+
+          <div class="table-responsive">
+            <table class="table table-striped table-sm">
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>expiration_date</th>
+                  <th>total_month</th>
+                  <th>total_owed</th>
+                  <th>charge</th>
+                  <th>status</th>
+                  <th>total_installments</th>
+                  <th>detail</th>
+                  <th>pay</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for debt in next_debts %}
+                <tr>
+                <td>{{ debt.bill.title }}</td>
+                <td>{{ debt.expiration_date }}</td>
+                <td>
+                {{ debt.bill.currency_code }} {{ debt.bill.currency_symbol }} {{ debt.total_month }}
+                </td>
+                <td>
+                {{ debt.bill.currency_code }} {{ debt.bill.currency_symbol }} {{ debt.total_owed }}
+                </td>
+                <td>
+                {{ debt.bill.currency_code }} {{ debt.bill.currency_symbol }} {{ debt.charge }}
+                </td>
+                <td>{{ debt.status.title }}</td>
+                <td>{{ debt.installment_number }} / {{ debt.bill.total_installments }}</td>
+                <td>{{ debt.detail|linebreaksbr }}</td>
+                <td>
+                  <a class="btn btn-primary" href="/pay/{{ debt.id }}">  PAY</a>
+                </td>
+                </tr>
+                {% endfor %}
+
+              </tbody>
+            </table>
+          </div>
+          <hr>
+
+          <h2>Paids debts</h2>
+          <div class="table-responsive">
+              <table class="table table-striped table-sm">
+                <thead>
+                  <tr>
+                    <th>Title</th>
+                    <th>expiration_date</th>
+                    <th>total_month</th>
+                    <th>total_owed</th>
+                    <th>charge</th>
+                    <th>status</th>
+                    <th>total_installments</th>
+                    <th>detail</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for paid in paids %}
+                  <tr>
+                  <td>{{ paid.bill.title }}</td>
+                  <td>{{ paid.expiration_date }}</td>
+                  <td>
+                  {{ paid.bill.currency_code }} {{ paid.bill.currency_symbol }} {{ paid.total_month }}
+                  </td>
+                  <td>
+                  {{ paid.bill.currency_code }} {{ paid.bill.currency_symbol }} {{ paid.total_owed }}
+                  </td>
+                  <td>
+                  {{ paid.bill.currency_code }} {{ paid.bill.currency_symbol }} {{ paid.charge }}
+                  </td>
+                  <td>{{ paid.status.title }}</td>
+                  <td>{{ paid.installment_number }} / {{ paid.bill.total_installments }}</td>
+                  <td>{{ paid.detail|linebreaksbr }}</td>
+                  </tr>
+                  {% endfor %}
+  
+                </tbody>
+              </table>
+            </div>
+{% endblock %}
